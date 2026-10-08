@@ -28,6 +28,7 @@ independent of WHOOP, and its wellness estimates are not proprietary WHOOP score
 The app stores data locally and provides optional, user-controlled imports, exports, backups,
 and provider integrations. No provider credentials or developer data server are supplied.
 See the [privacy policy](TESTFLIGHT-PRIVACY.md) and [icon details](TESTFLIGHT-ICON.md).
+The [third-party notices](THIRD-PARTY-NOTICES.md) are included in the TestFlight beta license agreement.
 
 ## Manual release procedure
 
@@ -68,4 +69,38 @@ schedules, external integrations, or paid overages without applying the hosted-j
 
 ## Release evidence
 
-The final release state, test totals, and review gates will be recorded here after upload verification.
+Verified October 8, 2026. Both uploaded builds are **VALID** and **IN_BETA_TESTING** internally.
+Both external submissions are **WAITING_FOR_BETA_REVIEW**. Public beta availability remains pending
+Apple's approval; uploading and enabling a public link do not bypass beta review.
+
+| Platform | Version / build | Internal availability | External availability | Installation evidence |
+| --- | --- | --- | --- | --- |
+| iOS / iPadOS | 12.0.0 / 436 | In beta testing | Waiting for beta review | Simulator build and first screen inspected; physical iPhone installation pending |
+| Native macOS | 12.0.0 / 436 | In beta testing | Waiting for beta review | Installed through TestFlight on Apple Silicon; receipt, version, launch, and sample preview verified |
+
+The external group is configured for both native builds with a 10,000-person public-link limit:
+[NOOP public beta](https://testflight.apple.com/join/jwhWhweh). **This link is pending review and must
+not be announced as publicly available yet.** The iOS build is not offered as a substitute for the
+native Mac app or as an Apple Vision app.
+The public landing page was inspected through computer use and displayed
+"This beta isn't accepting any new testers right now," consistent with the pending review states.
+
+Authorized internal invitations were verified in App Store Connect. A WhatsApp reply to the requested
+recipient in the requested group was sent through computer use; it stated that the internal builds
+were published, the invitation was ready, and the public beta was still awaiting Apple review.
+Tester addresses, invitation links, and private chat content are not committed to this repository.
+
+Eight package suites plus the native Mac suite executed **6,617 tests, four skipped, zero failures**.
+The iOS simulator build succeeded. Signed archives and exported app bundles passed the release
+verifier, including both Mac architectures, nested iOS targets, privacy manifests, required notices,
+icon format, HealthKit, App Group, and iPad orientations. No live sensor pairing, physical iPhone
+acceptance, or physical Intel Mac test has been performed.
+
+Uploaded artifact SHA-256 values:
+
+- iOS IPA: `ae36cd552023296e7fbf7779bf7ee29050d140d7abaeefcbfb41c1ac26bd825b`
+- macOS installer: `887d991b881002b970b77ecfc6c3b0064100b5819e5c5ebccdac1a13a0b7dead`
+
+Preserved archives, signed exports, test reports, signature/resource checks, and private API snapshots
+are under ignored `build/release/`. Continue external approval verification using the existing
+manual helper and exact uploaded build IDs; do not regenerate or upload a replacement merely to poll.
