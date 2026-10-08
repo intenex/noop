@@ -92,6 +92,7 @@ targets:
       # so its Foundation-only trace model belongs to the macOS app module as well.
       - StrandiOSShared/StressTrace.swift
       - path: DistributionResources
+        buildPhase: resources
     # Oura BYO-app OAuth credentials. OuraConfig.xcconfig is a tracked wrapper that optionally
     # includes the untracked, gitignored Strand/Oura/OuraSecrets.xcconfig (template at
     # OuraSecrets.example.xcconfig) — absent secrets leave the $(OURA_*) references in the
@@ -236,6 +237,7 @@ targets:
           - "Resources/NOOP.entitlements"
       - path: StrandiOSShared
       - path: DistributionResources
+        buildPhase: resources
     # Same tracked wrapper as the macOS target (Strand/Oura/ is shared, not per-platform).
     configFiles:
       Debug: Strand/Oura/OuraConfig.xcconfig

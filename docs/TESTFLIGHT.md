@@ -54,14 +54,16 @@ tester-facing state. Upload, processing, internal availability, external approva
 are separate gates; report each honestly.
 
 `Tools/testflight_api.py` and `Tools/testflight_register.py` provide bounded, manual official-Apple
-API access. The API key stays in the user's private key directory and tokens are never printed.
+API access using Python 3 with `cryptography`. The API key stays in the user's private key directory and tokens are never printed.
 These helpers do not run on a schedule or enable paid services.
 
 ## Hosted-job budget
 
 The release is built, tested, signed, and uploaded locally. No hosted CI, deployment, AI, or recurring
 job has been enabled by this edition. Added monthly hosted usage is **0**. The upstream workflow
-files remain intact and the fork's workflows are not activated. Do not enable premium runners,
+files remain intact. After pushing the release source, GitHub registered 11 inherited workflows,
+with zero runs, artifacts, and cache usage. No workflow was dispatched or enabled manually.
+Do not enable premium runners,
 schedules, external integrations, or paid overages without applying the hosted-job cost safety policy.
 
 ## Release evidence
