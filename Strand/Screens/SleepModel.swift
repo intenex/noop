@@ -180,6 +180,8 @@ struct SleepModel {
 
     private static let shortDayFormatter: DateFormatter = {
         let f = DateFormatter()
+        // A day key is a calendar label, not an instant to shift into the device's time zone.
+        f.timeZone = TimeZone(secondsFromGMT: 0)
         f.locale = AppLanguage.activeLocale
         f.setLocalizedDateFormatFromTemplate("dMMM")
         return f

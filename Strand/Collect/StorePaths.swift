@@ -34,7 +34,10 @@ enum StorePaths {
         // If we redirected into the sandbox container but the container store is
         // absent/empty while a legacy non-container store exists, migrate the old
         // data in once so existing macOS users don't appear to lose everything.
-        if containerAppSupport != appSupport {
+        if ProjectInfo.isTestFlightDistribution {
+            // This edition owns a separate container. Bringing another app's health library into
+            // it must be an explicit user import, never a first-launch migration or automatic copy.
+        } else if containerAppSupport != appSupport {
             migrateLegacyStoreIfNeeded(from: appSupport.appendingPathComponent("OpenWhoop", isDirectory: true),
                                        to: base, dbURL: dbURL)
         } else {
@@ -77,10 +80,15 @@ enum StorePaths {
     /// the store there explicitly so the path is stable regardless of whether the
     /// sandbox is fully engaged when this runs. Non-production bundle IDs and all
     /// other platforms keep the plain Application Support directory.
-    private static func macOSProductionContainerAppSupport(defaultingTo appSupport: URL) -> URL {
+    static func macOSProductionContainerAppSupport(
+        defaultingTo appSupport: URL,
+        bundleIdentifier: String? = Bundle.main.bundleIdentifier,
+        isTestFlightDistribution: Bool = ProjectInfo.isTestFlightDistribution,
+        homeDirectory: URL? = nil
+    ) -> URL {
         #if os(macOS)
-        let productionBundleID = "com.noopapp.noop"
-        guard Bundle.main.bundleIdentifier == productionBundleID else { return appSupport }
+        guard let productionBundleID = bundleIdentifier,
+              productionBundleID == "com.noopapp.noop" || isTestFlightDistribution else { return appSupport }
 
         let containerSegment = "/Library/Containers/\(productionBundleID)/Data/"
         // Already inside the container (sandbox resolved the path for us) — use as-is.
@@ -91,7 +99,7 @@ enum StorePaths {
         // Compute the container Application Support directly from the home dir.
         // homeDirectoryForCurrentUser already points at the container root when the
         // sandbox is engaged, so guard against double-nesting if it does.
-        let home = FileManager.default.homeDirectoryForCurrentUser
+        let home = homeDirectory ?? FileManager.default.homeDirectoryForCurrentUser
         if home.standardizedFileURL.path.contains(containerSegment) {
             return appSupport
         }

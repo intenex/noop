@@ -1,3 +1,8 @@
+> **Native TestFlight edition:** This is Benjamin Yu's free, noncommercial distribution fork.
+> iPhone and Mac installation, beta status, privacy, and compatibility are described in
+> [the TestFlight guide](docs/TESTFLIGHT.md). WHOOP 5.0/MG support remains experimental.
+> The original project's documentation and required notices are preserved below.
+
 <p align="center">
   <img src="docs/assets/logo-v3.png" alt="NOOP" width="72">
 </p>

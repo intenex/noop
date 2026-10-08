@@ -2483,8 +2483,26 @@ struct SettingsView: View {
                 iphoneExpectations
                 #endif
 
-                // Check for updates — a single, user-initiated read of GitHub's public releases API.
-                // No background polling, no auto-update; sends nothing about you, just reads the version.
+                if ProjectInfo.isTestFlightDistribution {
+                    VStack(alignment: .leading, spacing: NoopMetrics.space2) {
+                        Link(destination: URL(string: "https://testflight.apple.com")!) {
+                            Label("Updates in TestFlight", systemImage: "arrow.triangle.2.circlepath")
+                        }
+                        .buttonStyle(NoopButtonStyle(.secondary))
+                        Text("Open TestFlight to install updates and send feedback. Each beta build is available for 90 days after upload.")
+                            .font(StrandFont.footnote)
+                            .foregroundStyle(StrandPalette.textSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Text("This free, noncommercial edition is distributed by Benjamin Yu and built from the NOOP community project.")
+                            .font(StrandFont.footnote)
+                            .foregroundStyle(StrandPalette.textSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Link("TestFlight edition source & support", destination: ProjectInfo.distributionSource)
+                        Link("Privacy policy", destination: ProjectInfo.privacyPolicy)
+                        Link("License and acknowledgements", destination: ProjectInfo.distributionSource.appendingPathComponent("blob/main/NOTICE"))
+                    }
+                } else {
+                // Sideloaded editions retain upstream's update flow.
                 VStack(alignment: .leading, spacing: NoopMetrics.space2) {
                     HStack(spacing: NoopMetrics.space2 + 2) {
                         Button {
@@ -2573,6 +2591,7 @@ struct SettingsView: View {
                     Text("Checks the project's home (GitHub) for the latest version when you tap. Nothing else is sent.")
                         .font(StrandFont.footnote)
                         .foregroundStyle(StrandPalette.textTertiary)
+                }
                 }
 
                 // Project home — NOOP's code, releases, issues and wiki live on GitHub.
@@ -2705,12 +2724,16 @@ struct SettingsView: View {
                     .foregroundStyle(StrandPalette.textPrimary)
             }
 
-            iphoneExpectationLine(String(localized: "This is a sideloaded build, installed outside the App Store. It needs re-signing periodically: roughly every 7 days on a free Apple ID, about a year on a paid developer account."))
+            if ProjectInfo.isTestFlightDistribution {
+                iphoneExpectationLine(String(localized: "This beta is installed and updated through TestFlight. No sideloading or weekly re-signing is needed. TestFlight shows when this build expires."))
+            } else {
+                iphoneExpectationLine(String(localized: "This is a sideloaded build, installed outside the App Store. It needs re-signing periodically: roughly every 7 days on a free Apple ID, about a year on a paid developer account."))
+            }
             iphoneExpectationLine(String(localized: "After your iPhone reboots, unlock it once. Until you do, iOS keeps NOOP's files locked (Data Protection), so new history can't be written or synced."))
             iphoneExpectationLine(String(localized: "Background Bluetooth has OS limits: iOS may pause NOOP when it's not in the foreground, so keep it open while syncing a fresh strap."))
             iphoneExpectationLine(String(localized: "On a beta version of iOS, things can break that work on the release build."))
 
-            if let days = expiry {
+            if !ProjectInfo.isTestFlightDistribution, let days = expiry {
                 let warning = days <= 3
                 HStack(alignment: .top, spacing: 8) {
                     Image(systemName: warning ? "exclamationmark.triangle.fill" : "clock.badge.checkmark")

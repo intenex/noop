@@ -40,6 +40,7 @@ final class UpdateChecker: ObservableObject {
     }
 
     static func fetchLatest() async -> Release? {
+        guard !ProjectInfo.isTestFlightDistribution else { return nil }
         do {
             var req = URLRequest(url: Self.endpoint, timeoutInterval: 12)
             req.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")

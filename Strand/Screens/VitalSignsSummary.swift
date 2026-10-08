@@ -493,6 +493,8 @@ enum BodyVitalSigns {
 
     static let dayFormatter: DateFormatter = {
         let f = DateFormatter()
+        // Match the day-key parser so a local time zone cannot move this label to yesterday.
+        f.timeZone = TimeZone(secondsFromGMT: 0)
         f.locale = Locale(identifier: "en_US_POSIX")
         f.dateFormat = "d MMM"
         return f

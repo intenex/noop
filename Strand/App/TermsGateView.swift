@@ -9,6 +9,7 @@ struct TermsGateView: View {
     let onAccept: () -> Void
     /// One flag per `Terms.attestations` entry; every one must be ticked before Accept enables.
     @State private var checks: [Bool] = Array(repeating: false, count: Terms.attestations.count)
+    @State private var showingPreview = false
 
     private var allChecked: Bool { checks.allSatisfy { $0 } }
 
@@ -83,6 +84,13 @@ struct TermsGateView: View {
                     .fill(StrandPalette.hairline)
                     .frame(height: 1)
 
+                if ProjectInfo.isTestFlightDistribution {
+                    Button("Preview with sample data") { showingPreview = true }
+                        .buttonStyle(.bordered)
+                        .padding(.top, 16)
+                        .accessibilityHint("Explore a read-only sample without connecting a sensor or accepting the terms.")
+                }
+
                 Button(action: onAccept) {
                     Text("Accept & Continue")
                         .font(StrandFont.headline)
@@ -97,5 +105,72 @@ struct TermsGateView: View {
             }
             .frame(maxWidth: 560, maxHeight: 720)
         }
+        .sheet(isPresented: $showingPreview) { TestFlightPreviewView() }
+    }
+}
+
+/// A read-only, synthetic preview for new users and beta reviewers. It holds no repository,
+/// never seeds the personal database, and cannot pair, import, export, or contact a provider.
+private struct TestFlightPreviewView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 22) {
+                    Label("Sample data", systemImage: "sparkles")
+                        .font(.headline).foregroundStyle(StrandPalette.accent)
+                    Text("Your day, on your device")
+                        .font(.largeTitle.bold())
+                    Text("A preview of the readings and independent wellness estimates NOOP can organize. These values are fictional and are never saved to your library.")
+                        .foregroundStyle(.secondary)
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 14)], spacing: 14) {
+                        sampleCard("Readiness", value: "78%", symbol: "heart.circle", detail: "Independent estimate")
+                        sampleCard("Sleep", value: "7h 42m", symbol: "moon.zzz", detail: "Sample night")
+                        sampleCard("Resting heart rate", value: "54 bpm", symbol: "waveform.path.ecg", detail: "Sample reading")
+                        sampleCard("Heart rate variability", value: "68 ms", symbol: "heart.text.square", detail: "Sample RMSSD")
+                    }
+                    VStack(alignment: .leading, spacing: 12) {
+                        Label("Explore your trends", systemImage: "chart.xyaxis.line")
+                        Text("Review sleep, workouts, heart rate, and trends in the native app. Import your own exports, keep a local journal, and back up your library to a folder you choose.")
+                            .foregroundStyle(.secondary)
+                        Divider()
+                        Label("Connect your own sensor", systemImage: "sensor.tag.radiowaves.forward")
+                        Text("Close this preview, read the terms, then follow setup to pair your strap. WHOOP 4.0 is the established upstream path. WHOOP 5.0/MG support remains experimental and firmware-dependent.")
+                            .foregroundStyle(.secondary)
+                        Text("NOOP is independent of WHOOP. Estimates are for general wellness and are not medical measurements or WHOOP's proprietary scores.")
+                            .font(.footnote).foregroundStyle(.secondary)
+                    }
+                    .padding(18)
+                    .background(.quaternary, in: RoundedRectangle(cornerRadius: 18))
+                    Link("Privacy and source", destination: ProjectInfo.privacyPolicy)
+                }
+                .padding(24)
+                .frame(maxWidth: 720, alignment: .leading)
+                .frame(maxWidth: .infinity)
+            }
+            .navigationTitle("NOOP Preview")
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+        #if os(macOS)
+        .frame(minWidth: 520, idealWidth: 640, minHeight: 560, idealHeight: 680)
+        #endif
+    }
+
+    private func sampleCard(_ title: String, value: String, symbol: String, detail: String) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Image(systemName: symbol).font(.title2).foregroundStyle(StrandPalette.accent)
+            Text(value).font(.title.bold()).minimumScaleFactor(0.7).lineLimit(1)
+            Text(title).font(.headline)
+            Text(detail).font(.caption).foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, minHeight: 150, alignment: .leading)
+        .padding(16)
+        .background(.quaternary, in: RoundedRectangle(cornerRadius: 18))
+        .accessibilityElement(children: .combine)
     }
 }

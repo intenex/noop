@@ -10,6 +10,7 @@
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).coachbrief</string>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).healthwriteback</string>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).rescore</string>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER).stalebattery</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
@@ -51,10 +52,14 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.healthcare-fitness</string>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>NOOPDistribution</key>
+	<string>TestFlight</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsLocalNetworking</key>

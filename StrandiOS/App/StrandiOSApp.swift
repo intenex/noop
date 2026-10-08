@@ -485,6 +485,8 @@ private struct iOSRootView: View {
             RootTabView(homeScreenQuickActionsEnabled:
                 demoBypass || (onboarded && acceptedTerms == Terms.currentVersion
                     && automaticLaunchSheetResolved))
+                .disabled(!demoBypass && (!onboarded || acceptedTerms != Terms.currentVersion))
+                .accessibilityHidden(!demoBypass && (!onboarded || acceptedTerms != Terms.currentVersion))
             if !onboarded && !demoBypass {
                 OnboardingWizard(onFinished: {
                     onboarded = true
@@ -492,6 +494,8 @@ private struct iOSRootView: View {
                     // changelog at them; mark them current.
                     lastSeenChangelog = AppChangelog.currentVersion
                 })
+                .disabled(acceptedTerms != Terms.currentVersion)
+                .accessibilityHidden(acceptedTerms != Terms.currentVersion)
                 .transition(.opacity)
                 .zIndex(1)
             }

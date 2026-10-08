@@ -14,6 +14,8 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             RootView()
+                .disabled(!onboarded || acceptedTerms != Terms.currentVersion)
+                .accessibilityHidden(!onboarded || acceptedTerms != Terms.currentVersion)
             if !onboarded {
                 OnboardingWizard(onFinished: {
                     onboarded = true
@@ -21,6 +23,8 @@ struct ContentView: View {
                     // changelog at them; mark them current.
                     lastSeenChangelog = AppChangelog.currentVersion
                 })
+                .disabled(acceptedTerms != Terms.currentVersion)
+                .accessibilityHidden(acceptedTerms != Terms.currentVersion)
                 .transition(.opacity)
                 .zIndex(1)
             }

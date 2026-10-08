@@ -1,5 +1,12 @@
 # AGENTS.md — working on NOOP
 
+This checkout is the user-authorized, noncommercial TestFlight distribution fork at
+`intenex/noop`, based on `ryanbr/noop`. The user's explicit request to distribute native iOS
+and macOS builds overrides the upstream sideload-only distribution guidance below.
+Retain upstream attribution, the PolyForm Noncommercial license, local storage, and the
+default-off external integrations. Build and release locally; do not enable fork Actions,
+hosted jobs, paid overages, or cloud data collection as part of this distribution.
+
 Guidance for anyone (human or AI agent) submitting a pull request. This is the high-signal map;
 [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) is the full guide (BLE safety contract, design-system
 rules, add-a-metric/screen/command recipes), [`docs/BUILD.md`](docs/BUILD.md) covers signing/pairing,

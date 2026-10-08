@@ -139,6 +139,8 @@ enum UpdateWatch {
     /// path: it reports "couldn't check", because there a human is waiting on an answer.
     @MainActor
     static func runIfDue(currentVersion: String, sideloadHint: Bool, now: Date = Date()) {
+        // Apple owns update delivery for this edition; upstream downloads are a different app.
+        guard !ProjectInfo.isTestFlightDistribution else { return }
         let d = UserDefaults.standard
         // Runs before every guard below, including the toggle: a stale announcement must not outlive the
         // feature that posted it (see `shouldPruneAnnouncement`).
